@@ -1,0 +1,356 @@
+/*
+ * UNIVERSIDAD TECNICA DEL NORTE
+ * FACULTAD DE INGENIERIA EN CIENCIAS APLICADAS
+ * SISTEMAS EMBEBIDOS
+ * STEVEN FLORES
+ * 5to Nivel; 
+ * EXAMEN BIMESTRAL : Ejercicio 1
+ */
+ 
+#include <LiquidCrystal.h>				//Inicio libreria LCD
+#include <MsTimer2.h>					//Inicio libreria timer
+LiquidCrystal lcd (13,12,11,10,9,8);			//Inicio pines LCD	
+int on = 0;						//Inicio variable on
+int cont;						//Inicio variable cont
+void setup() {					
+  Serial.begin(9600);					//Inicio comunicacion serial
+  lcd.begin(16,2);					//Inicio LCD
+  attachInterrupt(0,activacion,LOW);			//Interrupcion para activacion
+  MsTimer2::set(1000,contador);				//Inicializacion timer metodo contador
+  MsTimer2::start();					//Inicio timer
+  
+}
+
+void loop() {
+  
+}
+void activacion(){
+  switch(on){						//Activacion segun on
+    case 0:
+    Serial.println("Inicio del sistema, inserte mediante el potenciometro el valor a jugar"); 		//Imprime mensaje en comunicacion serial
+    Serial.println("Una vez ingresado presione nuevamente para iniciar contador");			//Imprime mensaje en comunicacion serial
+    on++;						//Aumento contador
+    break;
+    case 1:						//Activacion segun on
+    Serial.println("Contador iniciado");		//Imprime mensaje en comunicacion serial
+    on++;						//Aumento contador
+    break;
+    case 2:						//Activacion segun on
+    Serial.println(" Contador Detenido");		//Imprime mensaje en comunicacion serial
+    on=0;						//Aumento contador
+    break;
+    
+  }
+}
+void contador(){
+  if(on==1){
+    cont=analogRead(0);					//Lee y convierte datos ingresados mediante potenciometro
+    cont=map(cont,0,1023,10,20);			//Convierte los datos al rango de 10 y 20
+    lcd.clear();					//Limpia LCD
+    lcd.setCursor(0,0);					//Seleccion posicion LCD
+    lcd.print("Ingrese Contador");			//Imprime mensaje en LCD
+    lcd.setCursor(0,1);					//Seleccion posicion LCD
+    lcd.print(cont);					//Imprime mensaje en LCD
+  }
+  if(on==2){
+    cont--;						//Realiza el contador decreciente
+    lcd.clear();					//Limpia LCD
+    lcd.setCursor(0,0);					//Seleccion posicion LCD
+    lcd.print("Corriendo");				//Imprime mensaje en LCD
+    lcd.setCursor(0,1);					//Seleccion posicion LCD
+    lcd.print(String("Contador: ")+String(cont));	//Imprime mensaje en LCD
+    if(cont==0){
+      on=0;						 
+      Serial.println("Contador Finalizado"); 		//Imprime mensaje en serial para comprobacion
+      lcd.clear();					//Limpia LCD
+      lcd.setCursor(0,0);				//Seleccion posicion LCD
+      lcd.print("Finalizado");				//Imprime mensaje en LCD
+      lcd.setCursor(0,1);				//Limpia LCD
+      lcd.print("Presione");				//Imprime mensaje en LCD
+    }
+   
+  }
+}
+/*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*
+*/
+/*
+ * UNIVERSIDAD TECNICA DEL NORTE
+ * FACULTAD DE INGENIERIA EN CIENCIAS APLICADAS
+ * SISTEMAS EMBEBIDOS
+ * STEVEN FLORES
+ * 5to Nivel; 
+ * EXAMEN BIMESTRAL : Ejercicio 2
+ */
+#include <LiquidCrystal.h>						//Inicio libreria LCD
+LiquidCrystal lcd (13,12,11,10,9,8);					//Pines LCD
+String dato;								// Inicio variable
+int tam;								// Inicio variable
+int tam1;								// Inicio variable
+int i=0;								// Inicio variable
+String salida;								// Inicio variable
+int j=0;								// Inicio variable
+int k=0;								// Inicio variable
+
+void setup(){
+  Serial.begin(9600);							//Inicia comunicacion Serial
+  Serial.println("Ingrese el mensaje a codificar");			/Imprime mensaje de inicializacion en comunicacion serial
+}
+void loop(){
+  if(Serial.available()>0){						//Funcion para ingreso por comunicacion serial
+    dato=Serial.readString(); 						//lee el dato 				
+    dato.toLowerCase(); 						// convertimos a minusculas
+    tam = dato.length()+1; 						//tener la cadena sin errores
+    char vector[tam];     						//creo el vector
+    dato.toCharArray(vector,tam);					//Se convierte el vector a caracteres para el analisis
+    for(i=0;i<tam-1;i++){
+         switch(vector[i]){
+            case 'a':
+            salida=salida+" *-";  					//codificacion morse
+            break;
+            case 'b':
+            salida=salida+" -***";  					//codificacion morse	
+            break;
+            case 'c':
+            salida=salida+" -*-*";  					//codificacion morse
+            break;
+            case 'd':
+            salida=salida+" -**";  					//codificacion morse
+            break;
+            case 'e':
+            salida=salida+" *";  					//codificacion morse
+            break;
+            case 'f':
+            salida=salida+" **-*";  					//codificacion morse
+            break;
+            case 'g':
+            salida=salida+" --*";  					//codificacion morse
+            break;
+            case 'h':
+            salida=salida+" ****";  					//codificacion morse
+            break;
+            case 'i':
+            salida=salida+" **";  					//codificacion morse
+            break;
+            case 'j':
+            salida=salida+" *---";  					//codificacion morse
+            break;
+            case 'k':
+            salida=salida+" -*-";  					//codificacion morse
+            break;
+            case 'l':
+            salida=salida+" *-**";  					//codificacion morse
+            break;
+            case 'm':
+            salida=salida+" --";  					//codificacion morse
+            break;
+            case 'n':
+            salida=salida+" -*";  					//codificacion morse
+            break;
+            case 'o':
+            salida=salida+" ---";  					//codificacion morse
+            break;
+            case 'p':
+            salida=salida+" *--*";  					//codificacion morse
+            break;
+            case 'q':
+            salida=salida+" --*-";  					//codificacion morse
+            break;
+            case 'r':
+            salida=salida+" *-*";  					//codificacion morse
+            break;
+            case 's':
+            salida=salida+" ***";  					//codificacion morse
+            break;
+            case 't':
+            salida=salida+" -";  					//codificacion morse
+            break;
+            case 'u':
+            salida=salida+" **-";  					//codificacion morse
+            break;
+            case 'v':
+            salida=salida+" **-";  					//codificacion morse
+            break;
+            case 'w':
+            salida=salida+" *--";  					//codificacion morse
+            break;
+            case 'x':
+            salida=salida+" -**-";  					//codificacion morse
+            break;
+            case 'y':
+            salida=salida+" -*--";  					//codificacion morse
+            break;
+            case 'z':
+            salida=salida+" --**";  					//codificacion morse
+            break;
+            case '1':
+            salida=salida+" *----";  					//codificacion morse
+            break;
+            case '2':
+            salida=salida+" **---";  					//codificacion morse
+            break;
+            case '3':
+            salida=salida+" ***--";  					//codificacion morse
+            break;
+            case '4':
+            salida=salida+" ****-";  					//codificacion morse
+            break;
+            case '5':
+            salida=salida+" *****";  					//codificacion morse
+            break;
+            case '6':
+            salida=salida+" -****";  					//codificacion morse
+            break;
+            case '7':
+            salida=salida+" --***";  					//codificacion morse
+            break;
+            case '8':
+            salida=salida+" ---**";  					//codificacion morse
+            break;
+            case '9':
+            salida=salida+" ----*";  					//codificacion morse
+            break;
+            case '0':
+            salida=salida+" -----";  					//codificacion morse
+            break;
+         }
+       }
+       Serial.println("Codigo " );					//Imprime mensaje en comunicacion serial
+       Serial.println(salida);						//Imprime el mensaje codificado en comunicacion serial
+       tam1 = salida.length()+1;					//Obtenemos tamaño del mensaje codificado
+       for(k=tam1+1; k>=0;k--){						//Ciclo for para LCD en movimiento
+        String texto = salida.substring(i-1);				//conversion de mensaje codificado
+        lcd.clear();							//Limpia la LCD
+        lcd.setCursor(k,1);						//Seleccciona la posicion LCD
+        lcd.print(texto);						//Imprime el mensaje codificado
+        delay(1000);							//Delay para impresion
+       }
+       Serial.println("Ingrese nuevamente el mensaje a codificar");	//Solicita un nuevo mensaje
+       lcd.clear();							//Limpia la LCD
+    }
+ }
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * UNIVERSIDAD TECNICA DEL NORTE
+ * FACULTAD DE INGENIERIA EN CIENCIAS APLICADAS
+ * SISTEMAS EMBEBIDOS
+ * STEVEN FLORES
+ * 5to Nivel; 
+ * EXAMEN BIMESTRAL : Ejercicio 3
+ */
+ #include<Servo.h>							//Inicio libreria servo
+ Servo servo;   							//Objeto para servo
+ const int A=8;								//Inicio variable para boton 1
+ const int B=9;								//Inicio variable para boton 2
+ const int C=10;							//Inicio variable para boton 3
+ const int D=11;							//Inicio variable para boton 4
+ const int E=12;							//Inicio variable para boton 5
+ int i=0;								//Inicio variable para  verificacion 5 digitos
+ int on=0;								//Variable para interrupcion
+ String aux;								//Variable auxiliar para obtencion de secuencia
+ void  setup(){
+  pinMode(A,INPUT);							//Inicio pin para boton
+  pinMode(B,INPUT);							//Inicio pin para boton
+  pinMode(C,INPUT);							//Inicio pin para boton
+  pinMode(D,INPUT);							//Inicio pin para boton
+  pinMode(E,INPUT);							//Inicio pin para boton
+  servo.attach(6);							//Inicio pin servo
+  servo.write(0);							//Inicio servo en cero
+  attachInterrupt(0,activacion,LOW);					//Boton para interrupcion		
+  Serial.begin(9600);							//Inicio comunicacion serial 
+  
+ }
+ void loop(){
+   switch(on){
+    case 1:
+      if(digitalRead(A)==LOW){						//activacion para boton en bajo
+        delay(300);							//delay antirrebote
+        aux = aux + "1";						//Ingreso mediante boton la secuencia 
+        i++;								//Aumento para verificacion de 5 caracteres
+        Serial.println("Boton registrado");				//Mensaje de confirmación
+      }
+      if(digitalRead(B)==LOW){						//activacion para boton en bajo
+        delay(300);
+        aux = aux + "2";						//Ingreso mediante boton la secuencia 
+        i++;
+        Serial.println("Boton registrado");
+      }
+      if(digitalRead(C)==LOW){						//activacion para boton en bajo
+        delay(300);
+        aux = aux + "3";						//Ingreso mediante boton la secuencia 
+        i++;							
+        Serial.println("Boton registrado");
+      }
+      if(digitalRead(D)==LOW){						//activacion para boton en bajo
+        delay(300);							//Ingreso mediante boton la secuencia 
+        aux = aux + "4";
+        i++;
+        Serial.println("Boton registrado");
+      }
+      if(digitalRead(E)==LOW){						//activacion para boton en bajo
+        delay(300);							//Ingreso mediante boton la secuencia 
+        aux = aux + "5";
+        i++;
+        Serial.println("Boton registrado");
+      }
+      break;
+    case 2:
+      if(i==5){
+        if(String(aux)=="24153"){					//verificacion de secuencia ingresada
+          Serial.println("Secuencia correcta, moviendo el motor");	//Mensaje de comprobacion
+          servo.write(100);						//Mueve el servo hasta 100
+          on=0;								//Reinicia la variable 
+        }else{
+          Serial.println("Secuencia incorrecta, Ingrese la secuencia correcta");	//Mensaje de informacion
+          aux="";							//Reinicia la variable de tipo String
+          i=0;								//reinicia la variable auxiliar
+          on=1;								//Inicia la variable para ingresar nuevamente una secuencia
+        }		
+      }else{
+        Serial.println("Secuencia incorrecta, Ingrese la secuencia correcta");	//Mensaje de informacion
+        aux="";								//reinicia la variable auxiliar
+        i=0;								//reinicia la variable auxiliar
+        on=1;								//Inicia la variable para ingresar nuevamente una secuencia
+      }
+      break;
+    }
+  }
+
+ void activacion (){							//Metodo de interrupcion
+  switch(on){
+    case 0:
+    Serial.println("Ingrese la secuencia de botones");			//Imprime mensaje
+    Serial.println("Presione nuevamente para comprobar la secuencia"); //Imprime mensaje
+    on++;								//Aumenta el contador on				
+    break;
+    case 1: 
+    Serial.println("Secuencia Ingresada");				//Imprime mensaje
+    Serial.println(aux);						//Imprime el vector ingresado
+    Serial.println("Verificando");					//Imprime mensaje de comprobación
+    on++;								//Aumenta el contador on
+    break;
+  }
+ }
